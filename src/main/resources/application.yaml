@@ -1,5 +1,47 @@
-spring:
+server:
   port: 24000
+
+university:
+  servlet:
+    trace-id-header-name: X-Transaction-Id
+  kafka:
+    topics:
+      audit: university.audit.events
+
+spring:
+  batch:
+    job:
+      enabled: false
+  application:
+    name: university-administration
+
+  kafka:
+    bootstrap-servers: localhost:9092
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      retries: 3
+      properties:
+        enable.idempotence: true
+        delivery.timeout.ms: 120000
+        request.timeout.ms: 30000
+
+    consumer:
+      group-id: audit-group
+      auto-offset-reset: earliest
+      enable-auto-commit: true
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.value.default.type: com.university.administration.infrastructure.kafka.model.AuditEvent
+        spring.json.use.type.headers: false
+
+      listener:
+        concurrency: 1
+
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
@@ -15,5 +57,3 @@ spring:
       leak-detection-threshold: 20000
       initialization-fail-timeout: 0
       pool-name: HikariPool-1
-  application:
-    name: administration
