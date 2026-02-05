@@ -14,6 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -48,6 +51,50 @@ public class GlobalExceptionHandler {
                 request
         );
     }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiError> handleAuthenticationException(
+            AuthenticationException ex,
+            HttpServletRequest request
+    ) {
+
+        return buildError(
+                HttpStatus.UNAUTHORIZED,
+                "Authentication Failed",
+                "Invalid username or password",
+                request
+        );
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiError> handleBadCredentials(
+            BadCredentialsException ex,
+            HttpServletRequest request
+    ) {
+
+        return buildError(
+                HttpStatus.UNAUTHORIZED,
+                "Bad Credentials",
+                "Username or password is incorrect",
+                request
+        );
+    }
+
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiError> handleAccessDenied(
+            AccessDeniedException ex,
+            HttpServletRequest request
+    ) {
+
+        return buildError(
+                HttpStatus.FORBIDDEN,
+                "Access Denied",
+                "You do not have permission to access this resource",
+                request
+        );
+    }
+
 
 
     @ExceptionHandler(HttpMessageNotReadableException.class)

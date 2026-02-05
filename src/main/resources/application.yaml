@@ -1,6 +1,8 @@
 server:
   port: 24000
-
+batch:
+  files:
+    base-path: ../users-batch
 university:
   servlet:
     trace-id-header-name: X-Transaction-Id
@@ -9,9 +11,6 @@ university:
       audit: university.audit.events
 
 spring:
-  batch:
-    job:
-      enabled: false
   application:
     name: university-administration
 
@@ -57,3 +56,6 @@ spring:
       leak-detection-threshold: 20000
       initialization-fail-timeout: 0
       pool-name: HikariPool-1
+logging:
+  level:
+    org.springframework.batch: DEBUG
