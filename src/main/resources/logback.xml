@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <springProperty name="INSTANCE_ID" source="spring.application.name"/>
+
+    <property name="LOGS_LEVEL" value="INFO"/>
+
+    <property name="COLOR_PATTERN"
+              value="%green(%d{yyyy-MM-dd HH:mm:ss.SSS}) [%cyan(${INSTANCE_ID})] [%15.15thread] %highlight(%-5level) %cyan(%-40.40logger{40}) [%X{transactionId:-NO-TX}] - %msg%n"/>
+
+    <appender name="TECHNICAL" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${COLOR_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="BUSINESS" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%green(%d{yyyy-MM-dd HH:mm:ss.SSS}) [%cyan(${INSTANCE_ID})] [%15.15thread] %yellow(BUSINESS) %cyan(%-40.40logger{40}) [%X{transactionId:-NO-TX}] - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="com.university.administration.utils.logs.APILogger"
+            level="INFO"
+            additivity="false">
+        <appender-ref ref="BUSINESS"/>
+    </logger>
+
+    <logger name="com.university.administration"
+            level="${LOGS_LEVEL}"
+            additivity="false">
+        <appender-ref ref="TECHNICAL"/>
+    </logger>
+
+    <root level="INFO">
+        <appender-ref ref="TECHNICAL"/>
+    </root>
+
+</configuration>
