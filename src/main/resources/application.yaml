@@ -2,7 +2,7 @@ server:
   port: 24000
 batch:
   files:
-    base-path: ../users-batch
+    base-path: ../grades-batch
 university:
   servlet:
     trace-id-header-name: X-Transaction-Id
